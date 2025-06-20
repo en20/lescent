@@ -1,0 +1,578 @@
+<style>
+    .upsell-product-card {
+      border-radius: 15px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: #f8f8f8; /* Default fallback */
+      position: relative;
+      overflow: visible;
+      z-index: 1;
+    }
+    .upsell-product-title {
+      font-weight: 700;
+      overflow: visible;
+      position: relative;
+      z-index: 2;
+      font-size: 24px;
+      margin: 0;
+      padding: 0;
+      line-height: 1.2;
+    }
+    .upsell-product-title-a {
+      position: relative;
+      z-index: 3;
+      font-size: 15px;
+      margin: 0;
+      padding: 0;
+      line-height: 1.2;
+      max-width: 100%;
+      display: block;
+      font-weight: 900;
+    }
+    
+    /* Control title display with max-width instead of white-space */
+    .upsell-product-title-a a {
+      display: inline-block;
+      max-width: 200px; /* Default for mobile */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal; /* Allow normal line breaking */
+      display: -webkit-box;
+      -webkit-line-clamp: 2; /* Limit to 2 lines */
+      -webkit-box-orient: vertical;
+    }
+    
+    /* Wider display for desktop */
+    @media (min-width: 768px) {
+      .upsell-product-title-a a {
+        max-width: 280px; /* Reduced width for desktop to prevent too long titles */
+        -webkit-line-clamp: 2; /* Limit to 2 lines on desktop */
+      }
+    }
+    
+    /* Show full title only on small mobile devices */
+    @media (min-width: 320px) and (max-width: 375px) {
+      .upsell-product-title-a a {
+        max-width: none;
+        -webkit-line-clamp: initial;
+        text-overflow: initial;
+      }
+    }
+    .upsell-product-title-b {
+      font-weight: 900;
+      overflow: visible;
+      position: relative;
+      z-index: 3;
+      font-size: 22px;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      line-height: 1.2;
+    }
+    @media (min-width: 768px) {
+      .upsell-product-images {
+        margin-right: 24px;
+      }
+    }
+    .upsell-product-content {
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      width: 100%;
+      z-index: 1;
+    }
+    @media (max-width: 768px) {
+      .upsell-product-info:not(:has(.upsell-product-description)) {
+        transform: none;
+      }
+      .upsell-product-info {
+        margin-top: 0;
+        padding-top: 0;
+      }
+      .upsell-product-title,
+      .upsell-product-title-a {
+        margin-top: 0;
+        line-height: 1.1;
+      }
+    }
+  
+    .upsell-product-images img {
+      
+      border-radius: 10px;
+    }
+    .upsell-product-images {
+      flex-shrink: 0;
+      margin-right: 16px;
+    }
+    .upsell-product-info {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      position: relative;
+      z-index: 3;
+      width: 100%;
+      gap: 0;
+    }
+  
+    .pottd-button-upsell {
+      font-size: 12px;
+      position: relative;
+      margin-left: auto;
+      z-index: 1;
+      width: 120px;
+      color: #ffff;
+      font-weight: bold;
+      padding: 10px 20px;
+      text-align: center;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+  
+    .pottd-button-upsell:hover {
+      transform: scale(1.05);
+    }
+  
+    .upsell-product-button {
+      background-color: #ffff00;
+      color: #111e4d;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 10px 20px;
+      text-align: center;
+      border-radius: 50px;
+      border: 2px solid #111e4d;
+      text-decoration: none;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+  
+    .upsell-product-button:hover {
+      background-color: #ffeb3b;
+      transform: scale(1.05);
+    }
+    .upsell-product-price {
+      position: relative;
+    }
+  
+    .upsell-product-description {
+      width: 50%;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      min-width: min-content; /* Prevents unnecessary line breaks for short text */
+    }
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .upsell-product-title-a {
+        font-size: 12px;
+      }
+    }
+    @media (max-width: 1280px) {
+      .upsell-product-title-a {
+        top: 0;
+        font-weight: 900;
+        overflow: visible;
+        position: relative;
+        z-index: 3;
+        font-size: 12px;
+        max-width: none;
+      }
+      .pottd-button-upsell {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        width: 100px;
+        font-size: 10px;
+      }
+      .upsell-product-title {
+        font-size: 12px;
+      }
+      .upsell-product-title-a {
+        max-width: 75%;
+      }
+      .text-price {
+        font-size: 12px;
+      }
+      .title {
+        font-size: 12px;
+      }
+    }
+    .text-price {
+      font-size: 18px; /* Decreased from 20px for mobile */
+      font-weight: 900;
+    }
+    .title {
+      font-size: 14px; /* Increased from 12px */
+    }
+  
+    @media (min-width: 320px) and (max-width: 375px) {
+      .upsell-product-title-a {
+        font-size: 14px;
+        text-align: center;
+        width: 100%;
+      }
+      .upsell-product-title {
+        font-size: 14px;
+        text-align: center;
+        width: 100%;
+      }
+      .text-price {
+        font-size: 12px !important; /* Decreased from 14px to 12px */
+        text-align: center;
+      }
+      .title {
+        font-size: 14px;
+        text-align: center;
+      }
+      .upsell-product-description {
+        font-size: 13px !important; /* Increased from 9px */
+        text-align: center;
+        width: 100%;
+      }
+      .pottd-button-upsell {
+        position: static;
+        width: 100%;
+        font-size: 12px;
+        right: auto;
+        transform: none;
+        margin-top: 10px;
+        display: block;
+      }
+      .upsell-product-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .upsell-product-images {
+        margin-right: 0;
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: center;
+      }
+      .upsell-product-info {
+        align-items: center;
+        width: 100%;
+        text-align: center;
+      }
+      .upsell-product-price {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        gap: 8px;
+      }
+      .upsell-product-price .tw-line-through {
+        margin-right: 8px;
+      }
+      .tw-mb-6.tw-mt-2 {
+        text-align: left;
+        padding: 0 10px;
+      }
+      .tw-mb-6.tw-mt-2 h1 {
+        font-size: 16px;
+        text-align: left;
+        width: 100%;
+        display: block;
+      }
+    }
+    
+    /* Additional mobile-specific override to ensure sizes are applied */
+    @media (max-width: 450px) {
+      .upsell-product-description, 
+      p.tw-text-[10px] {
+        font-size: 13px !important; /* Increased from 9px */
+      }
+      h7.tw-text-[13px], .text-price {
+        font-size: 13px !important; /* Decreased from 13px to 11px */
+      }
+      span.tw-line-through {
+        font-size: 10px !important;
+      }
+    }
+    @media (min-width: 750px) and (max-width: 840px) {
+      .upsell-product-title-a {
+        font-size: 14px;
+      }
+      .upsell-product-title {
+        font-size: 14px;
+      }
+      .text-price {
+        font-size: 20px; /* Increased from 18px */
+      }
+      .title {
+        font-size: 14px;
+      }
+      .upsell-product-description {
+        font-size: 12px !important;
+      }
+      .pottd-button-upsell {
+        width: 30%;
+        font-size: 10px;
+        right: 5px;
+      }
+    }
+  </style>
+  
+  {% assign upsell_product_handle = product.metafields.custom._all_fields_upsell_banner_.value.product1 %}
+  
+  {% if upsell_product_handle %}
+    {% assign upsell_product = all_products[upsell_product_handle] %}
+    {% if upsell_product %}
+      {%- liquid
+        assign section_id = 'upsell-' | append: upsell_product.id
+        assign upsell_product_form_id = 'product-form-upsell-' | append: upsell_product.id
+      -%}
+      
+      <!-- Add CTA title outside the card -->
+      
+      <div class="tw-mb-10 tw-mt-4">
+        <h1 class="tw-text-[20px] lg:tw-text-[22px] tw-font-extrabold tw-text-[#111e4d] upsell-product-title-b">
+          {% if product.metafields.custom._all_fields_upsell_banner_.value.texto_acima_do_banner %}
+            {{ product.metafields.custom._all_fields_upsell_banner_.value.texto_acima_do_banner }}
+          {% endif %}
+        </h1>
+      </div>
+      
+      <div style="height: 20px;"></div> <!-- Extra spacing element -->
+     
+      
+      <div class="upsell-product-card tw-mb-4" 
+           {% if product.metafields.custom._all_fields_upsell_banner_.value.background_color1 %}
+             style="background-color: {{ product.metafields.custom._all_fields_upsell_banner_.value.background_color1 }};"
+           {% elsif product.metafields.custom._all_fields_upsell_banner_.value.upsell_banner_background_color1 %}
+             style="background-color: {{ product.metafields.custom._all_fields_upsell_banner_.value.upsell_banner_background_color1 }};"
+           {% else %}
+             style="background-color: #f8f8f8;" 
+           {% endif %}
+      >
+        <div class="upsell-product-content tw-flex tw-flex-row tw-justify-start tw-items-center"
+            style="position: relative;">
+          <div class="upsell-product-images tw-flex tw-flex-col tw-justify-start tw-items-center">
+            <a href="{{ upsell_product.url }}" class="tw-text-decoration-none">
+              <img
+                class="lg:!tw-w-[150px] !tw-w-[100px]"
+                src="{{ upsell_product.images[0] | image_url }}"
+                alt="{{ upsell_product.title }} - Image 1"
+                width="90"
+                height="90"
+                style="border-radius: 10px; border: 1px solid #000000;"
+              >
+            </a>
+          </div>
+          <div class="upsell-product-info">
+            <h2 class="upsell-product-title-a">
+              <a href="{{ upsell_product.url }}" class="tw-text-decoration-none" title="{{ upsell_product.title }}">
+                {% if request.design_mode %}
+                  {{ upsell_product.title }}
+                {% else %}
+                  {% assign title_length = upsell_product.title | size %}
+                  {% if title_length > 30 and template.name != 'product' %}
+                    {{ upsell_product.title | truncate: 30 }}
+                  {% else %}
+                    {{ upsell_product.title }}
+                  {% endif %}
+                {% endif %}
+              </a>
+            </h2>
+    
+            <div class="tw-flex tw-flex-row tw-justify-start tw-items-center tw-gap-2 upsell-product-price">
+              {% if upsell_product.compare_at_price_max > upsell_product.price %}
+                <span class="tw-line-through tw-text-[9px] lg:!tw-text-[14px] tw-font-extrabold" style="text-decoration: line-through;">
+                  {{ upsell_product.compare_at_price_max | money_without_trailing_zeros }}
+                </span>
+              {% endif %}
+              <h7 class=" tw-font-extrabold text-price tw-text-[#111e4d]" style="font-size: 15px !important;">
+                {{ upsell_product.price | money_without_trailing_zeros }}
+              </h7>
+            </div>
+            {% if product.metafields.custom._all_fields_upsell_banner_.value.bullet_points_title1 %}
+              <p class="tw-text-[13px] lg:!tw-text-[15px] upsell-product-description" style="display: inline-block; width: auto; max-width: 100%; font-size: 11px;">
+                {{- product.metafields.custom._all_fields_upsell_banner_.value.bullet_points_title1 -}}
+              </p>
+            {% endif %}
+            {% if product.metafields.custom._all_fields_upsell_banner_.value.bullet_points1 %}
+              <p class="tw-text-[13px] lg:!tw-text-[15px] upsell-product-description tw-line-clamp-3">
+                {{-
+                  product.metafields.custom._all_fields_upsell_banner_.value.bullet_points1
+                  | remove: '["'
+                  | remove: '"]'
+                  | remove: '"'
+                -}}
+              </p>
+            {% endif %}
+          </div>
+    
+          {% assign has_multiple_variants = false %}
+          {% if upsell_product.variants.size > 1 %}
+            {% assign has_multiple_variants = true %}
+          {% endif %}
+          
+          {% if has_multiple_variants %}
+            <a href="{{ upsell_product.url }}" class="pottd-button-upsell" 
+              {% if product.metafields.custom._all_fields_upsell_banner_.value.button_color %}
+                style="background-color: {{ product.metafields.custom._all_fields_upsell_banner_.value.button_color }};"
+              {% endif %}>
+              Comprar
+            </a>
+          {% else %}
+            <div class="upsell-button-container">
+              {%- form 'product', upsell_product, id: upsell_product_form_id, class: 'upsell-product-form' -%}
+                <input type="hidden" name="id" value="{{ upsell_product.selected_or_first_available_variant.id }}">
+                <input type="hidden" name="quantity" value="1">
+                
+                <button type="submit" 
+                  class="button--sm w-full"
+                  name="add"
+                  {% if product.metafields.custom._all_fields_upsell_banner_.value.button_color %}
+                    style="color: #ffffff; background-color: {{ product.metafields.custom._all_fields_upsell_banner_.value.button_color }};"
+                  {% endif %}
+                  {% unless upsell_product.available %}disabled{% endunless %}>
+                  {% if upsell_product.available %}Comprar{% else %}Esgotado{% endif %}
+                </button>
+              {%- endform -%}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+  
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const upsellForm = document.getElementById('{{ upsell_product_form_id }}');
+          if (upsellForm) {
+            upsellForm.addEventListener('submit', function(e) {
+              e.preventDefault();
+              
+              const submitButton = upsellForm.querySelector('button[type="submit"]');
+              const originalText = submitButton.textContent;
+              submitButton.textContent = "Adicionando...";
+              submitButton.disabled = true;
+              
+              fetch('/cart/add.js', {
+                method: 'POST',
+                body: new FormData(upsellForm),
+                credentials: 'same-origin'
+              })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                }
+                return response.json();
+              })
+              .then(data => {
+                submitButton.textContent = "Adicionado!";
+                
+                // Force a cart refresh by getting the latest cart data
+                fetch('/cart.js', {
+                  method: 'GET',
+                  credentials: 'same-origin',
+                  headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                  }
+                })
+                .then(response => response.json())
+                .then(cartData => {
+                  console.log('Cart updated:', cartData);
+                  
+                  // Dispatch a cart update event for theme components
+                  document.dispatchEvent(new CustomEvent('cart:refresh', { 
+                    bubbles: true,
+                    detail: { cart: cartData }
+                  }));
+                  
+                  // Try different methods to refresh cart UI
+                  if (typeof window.refreshCart === 'function') {
+                    window.refreshCart();
+                  } else if (typeof window.theme !== 'undefined') {
+                    if (window.theme.cart) {
+                      if (typeof window.theme.cart.reload === 'function') {
+                        window.theme.cart.reload();
+                      } else if (typeof window.theme.cart.refresh === 'function') {
+                        window.theme.cart.refresh();
+                      } else if (typeof window.theme.cart.getCart === 'function') {
+                        window.theme.cart.getCart();
+                      }
+                    }
+                  }
+                  
+                  // Try to open the cart drawer after a short delay to ensure it's updated
+                  setTimeout(() => {
+                    // Try multiple common selectors for cart drawer toggles
+                    const cartToggleSelectors = [
+                      '[data-action="open-mini-cart"]',
+                      '[data-drawer-id="mini-cart"]',
+                      '.header__icon--cart',
+                      '.js-drawer-open-cart',
+                      '[data-cart-toggle]',
+                      'a[href="/cart"]',
+                      '[aria-controls="mini-cart"]',
+                      '[data-drawer-trigger][aria-controls="cart-drawer"]'
+                    ];
+                    
+                    // Try each selector
+                    let cartOpened = false;
+                    for (const selector of cartToggleSelectors) {
+                      const toggleButton = document.querySelector(selector);
+                      if (toggleButton) {
+                        toggleButton.click();
+                        cartOpened = true;
+                        break;
+                      }
+                    }
+                    
+                    // If no button found, try theme-specific methods
+                    if (!cartOpened) {
+                      if (typeof window.theme !== 'undefined') {
+                        // Try common theme methods
+                        if (window.theme.openCartDrawer) {
+                          window.theme.openCartDrawer();
+                          cartOpened = true;
+                        } else if (window.theme.cart && window.theme.cart.open) {
+                          window.theme.cart.open();
+                          cartOpened = true;
+                        } else if (window.theme.miniCart && window.theme.miniCart.open) {
+                          window.theme.miniCart.open();
+                          cartOpened = true;
+                        } else if (typeof window.theme.openCartDrawer === 'function') {
+                          window.theme.openCartDrawer();
+                          cartOpened = true;
+                        }
+                      }
+                    }
+                    
+                    // If still not able to open cart, offer to go to cart page
+                    if (!cartOpened && confirm('Produto adicionado ao carrinho! Deseja ver seu carrinho agora?')) {
+                      window.location.href = '/cart';
+                    }
+                  }, 400);
+                })
+                .catch(error => {
+                  console.error('Error updating cart:', error);
+                });
+                
+                // Reset button after delay
+                setTimeout(() => {
+                  submitButton.textContent = originalText;
+                  submitButton.disabled = false;
+                }, 2000);
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                submitButton.textContent = "Erro! Tente novamente";
+                
+                setTimeout(() => {
+                  submitButton.textContent = originalText;
+                  submitButton.disabled = false;
+                }, 2000);
+              });
+            });
+          }
+        });
+      </script>
+    {% endif %}
+  {% endif %}
+  
